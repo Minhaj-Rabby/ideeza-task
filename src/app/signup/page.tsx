@@ -1,6 +1,6 @@
 'use client'
 import React, { useContext, useState } from 'react';
-import { AuthContext } from '../providers';
+import { AuthContext } from '../providers/providers';
 import Link from 'next/link';
 
 const SignUp = () => {

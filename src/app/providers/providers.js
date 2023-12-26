@@ -1,20 +1,26 @@
 'use client'
 import React, { createContext, useEffect, useState } from 'react'
 import { createUserWithEmailAndPassword, getAuth, onAuthStateChanged, signInWithEmailAndPassword, signOut } from 'firebase/auth';
-import { app } from './firebase.config';
+import { app } from '../firebase/firebase.config';
 
 
-export const AuthContext = createContext(null);
+export const AuthContext = createContext();
 const auth = getAuth(app);
 
 
 const AuthProvider = ({ children }) => {
 
-    let [user, setUser] = useState(null);
-
-    // let user=null;
+    const [user, setUser] = useState(null);
+    const [products, setProducts] = useState([]);
     const [loading, setLoading] = useState(true);
 
+
+    useEffect(() => {
+
+        fetch('products.json')
+            .then(res => res.json())
+            .then(data => setProducts(data))
+    }, [])
 
     const createUser = (email, password) => {
         setLoading(true);
@@ -44,6 +50,7 @@ const AuthProvider = ({ children }) => {
         signIn,
         logOut,
         loading,
+        products,
     }
     return (
         <AuthContext.Provider value={authInfo}>

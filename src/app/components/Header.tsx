@@ -1,6 +1,6 @@
 'use client'
 import { useContext } from 'react';
-import { AuthContext } from './providers';
+import { AuthContext } from '../providers/providers';
 import Link from 'next/link';
 
 const Header = () => {
@@ -17,7 +17,7 @@ const Header = () => {
     return (
 
         <nav className='flex justify-between p-4 bg-slate-200 text-black font-bold sticky top-0 z-50'>
-            <Link href="/">Simple E-commerce</Link>
+            <Link href="/">E-Commerce</Link>
             <div className='flex'>
                 <Link href="/">Shop</Link>
                 <Link href="/orders" className='mx-6'>Order</Link>
@@ -29,7 +29,6 @@ const Header = () => {
                         </span></>
                         :
                         <>
-                            <Link href="/login" className='mr-6'>LogIn</Link>
                             <Link href="/signup">SignUp</Link>
                         </>
                 }
