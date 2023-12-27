@@ -28,7 +28,7 @@ export default function Home() {
     const { products, cart, setCart } = useContext(AuthContext);
 
     useEffect(() => {
-        const storedCart: StoredCart = getShoppingCart();
+        const storedCart= getShoppingCart();
 
         const savedCart: ProductDetails[] = [];
         
