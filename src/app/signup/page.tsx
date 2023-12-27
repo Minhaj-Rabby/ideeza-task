@@ -1,54 +1,46 @@
 'use client'
-import React, { useContext, useState } from 'react';
+import React, { useContext, useState, FormEvent } from 'react';
 import { AuthContext } from '../providers/providers';
 import Link from 'next/link';
 
-const SignUp = () => {
-  const [error, setError] = useState('');
+const SignUp: React.FC = () => {
+  const [error, setError] = useState<string>('');
   const { createUser } = useContext(AuthContext);
-  const [show, setShow] = useState(false);
+  const [show, setShow] = useState<boolean>(false);
 
-  const handleSignUp = (event) => {
+  const handleSignUp = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
-    const form = event.target;
-    const email = form.email.value;
-    const password = form.password.value;
-    const confirm = form.confirmPassword.value;
-    console.log(email, password, confirm);
+    const form = event.currentTarget;
+    const email: string = form.email.value;
+    const password: string = form.password.value;
+    const confirm: string = form.confirmPassword.value;
 
     if (password !== confirm) {
-      setError('Your password is not matches');
+      setError('Your password does not match');
+      return;
+    } else if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&?"]).{8,}$/.test(password)) {
+      setError('Password must contain an Uppercase, a Lowercase, a Special character, a Digit, and be at least 8 characters long.');
       return;
     }
-    else if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&?"]).{8,}$/.test(password)) {
-      setError('Password Must Contain a Uppercase, a Lowercase , a Special character, a Digit   and 8 Character.');
-      return;
+
+    try {
+      const result = await createUser(email, password);
+      const loggedUser = result.user;
+      form.reset();
+      setError('');
+    } catch (error:any) {
+      console.error(error);
+      setError(error.message || 'Failed to create user');
     }
-    createUser(email, password)
-      .then(result => {
-        const loggedUser = result.user
-        console.log(loggedUser);
-        form.reset();
-        setError('');
-        alert(`${email} User Created Successfully`)
-
-      })
-      .catch(error => {
-        console.log(error);
-        setError(error.message);
-
-      })
   }
 
   return (
-
     <div className="hero min-h-screen bg-base-200">
       <div className="hero-content flex-col lg:flex-row-reverse">
-
         <div className="card shrink-0 w-full max-w-sm shadow-2xl bg-base-100">
           <h2 className='mt-5 text-2xl text-center'>SignUp</h2>
           <form onSubmit={handleSignUp} className="card-body">
-            <div className="form-control">
+          <div className="form-control">
               <label className="label">
                 <span className="label-text">Email</span>
               </label>
@@ -72,7 +64,6 @@ const SignUp = () => {
                 }
               </small></p>
             </div>
-
             <div className="form-control">
               <button className="btn btn-primary">SignUP</button>
             </div>
@@ -82,11 +73,10 @@ const SignUp = () => {
             <p className="label-text ml-1" ><small>Already have an Account?<Link href='/login'>SignIn</Link></small></p>
             <p className="label-text" ><small className='text-danger'>{error}</small></p>
           </form>
-
         </div>
       </div>
     </div>
-  )
+  );
 }
 
 export default SignUp;

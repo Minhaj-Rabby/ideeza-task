@@ -1,42 +1,34 @@
 'use client'
-import React, { useContext, useState } from 'react';
-import { AuthContext } from '../providers/providers'
+import React, { useContext, useState, FormEvent } from 'react';
+import { AuthContext } from '../providers/providers';
 import Link from 'next/link';
 
-const LogIn = () => {
-
-  const [error, setError] = useState('');
-  const [show, setShow] = useState(false);
+const LogIn: React.FC = () => {
+  const [error, setError] = useState<string>('');
+  const [show, setShow] = useState<boolean>(false);
   const { signIn } = useContext(AuthContext);
 
-
-  const handleSignIn = (event) => {
+  const handleSignIn = async (event: FormEvent<HTMLFormElement>): Promise<void> => {
     event.preventDefault();
-    const form = event.target;
-    const email = form.email.value;
-    const password = form.password.value;
-
-    console.log(email, password);
+    const form = event.currentTarget;
+    const email: string = form.email.value;
+    const password: string = form.password.value;
 
     if (!/^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%&?"]).{8,}$/.test(password)) {
-      setError('Password Must Contain a Uppercase, a Lowercase , a Special character, a Digit   and 8 Character.');
+      setError('Password must contain an Uppercase, a Lowercase, a Special character, a Digit, and be at least 8 characters long.');
       return;
     }
 
-    signIn(email, password)
-      .then(result => {
-        const loggedUser = result.user
-        // console.log(loggedUser);
-        form.reset();
-        setError('');
-        alert(`${email} Log In Successfully`)
-      })
-      .catch(error => {
-        console.log(error);
-        setError(error.message);
-
-      })
-  }
+    try {
+      const result = await signIn(email, password);
+      const loggedUser = result.user;
+      form.reset();
+      setError('');
+    } catch (error: any) {
+      console.error(error);
+      setError(error.message || 'Failed to log in');
+    }
+  };
 
   return (
 
@@ -57,7 +49,7 @@ const LogIn = () => {
                 <span className="label-text">Password</span>
               </label>
               <input type={show ? 'text' : 'password'} name="password" id="password" placeholder="password" className="input input-bordered" required />
-              <p className="label-text mt-2"  onClick={() => setShow(!show)}><small>
+              <p className="label-text mt-2" onClick={() => setShow(!show)}><small>
                 {
                   show ? 'Hide Password' : 'Show Password'
                 }
@@ -78,7 +70,7 @@ const LogIn = () => {
         </div>
       </div>
     </div>
-  )
-}
+  );
+};
 
-export default LogIn
+export default LogIn;

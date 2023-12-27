@@ -1,16 +1,35 @@
 'use client'
 import Link from 'next/link';
 import { AuthContext } from '../../providers/providers';
-import React, { useContext } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faCartPlus } from '@fortawesome/free-solid-svg-icons'
+import React, { useContext, FC } from 'react'
 
-const page = ({ params }) => {
-    const id = params.productdetails;
+interface Product {
+    id: string;
+    img: string;
+    name: string;
+    price: number;
+    seller: string;
+    ratings: number;
+    category: string;
+    stock: number;
+    ratingsCount: number;
+    shipping: number;
+}
+
+interface PageParams {
+    productdetails: string;
+}
+
+interface PageProps {
+    params: PageParams;
+}
+const page: FC<PageProps> = ({ params }) => {
+    const { productdetails: id } = params;
     const { products } = useContext(AuthContext);
 
-    const selectedproduct = products.find(product => product.id === id)
-    const { img, name, price, seller, ratings, category, stock, ratingsCount, shipping } = selectedproduct;
+    const selectedProduct: Product = products.find((product: Product) => product.id === id);
+
+    const { img, name, price, seller, ratings, category, stock, ratingsCount, shipping } = selectedProduct;
 
     return (
         <div className="card card-compact w-[350px] md:w-96 bg-base-100 border shadow-2xl mt-6 mx-auto">
@@ -40,4 +59,4 @@ const page = ({ params }) => {
     )
 }
 
-export default page
+export default page;

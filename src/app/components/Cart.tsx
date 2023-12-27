@@ -1,16 +1,20 @@
-import React, { useContext } from 'react'
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome'
-import { faTrashAlt,faCreditCard } from '@fortawesome/free-solid-svg-icons'
+import React, { useContext, FC } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faTrashAlt, faCreditCard } from '@fortawesome/free-solid-svg-icons';
 import { AuthContext } from '../providers/providers';
 import Link from 'next/link';
 
-const Cart = ({ handleclearFromCart }) => {
+interface CartProps {
+    handleclearFromCart: () => void;
+}
+
+const Cart: FC<CartProps> = ({ handleclearFromCart }) => {
 
     const { cart } = useContext(AuthContext);
 
-    let totalPrice = 0;
-    let totalShipping = 0;
-    let quantity = 0;
+    let totalPrice: number = 0;
+    let totalShipping: number = 0;
+    let quantity: number = 0;
 
     for (const product of cart) {
 
@@ -18,8 +22,8 @@ const Cart = ({ handleclearFromCart }) => {
         totalShipping = totalShipping + product.shipping;
         quantity = quantity + product.quantity;
     }
-    const tax = totalPrice * .1;
-    const grandTotal = totalPrice + totalShipping + tax;
+    const tax: number = totalPrice * .1;
+    const grandTotal: number = totalPrice + totalShipping + tax;
     return (
         <div className='font-semibold text-lg'>
             <h5 className='text-2xl font-bold text-center my-3'>Order Summery</h5>
@@ -42,4 +46,4 @@ const Cart = ({ handleclearFromCart }) => {
     )
 }
 
-export default Cart
+export default Cart;
