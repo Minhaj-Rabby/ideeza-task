@@ -13,7 +13,7 @@ const page = ({ params }) => {
     const { img, name, price, seller, ratings, category, stock, ratingsCount, shipping } = selectedproduct;
 
     return (
-        <div className="card card-compact w-96 bg-base-100 border shadow-2xl mt-6 mx-auto">
+        <div className="card card-compact w-[350px] md:w-96 bg-base-100 border shadow-2xl mt-6 mx-auto">
             <figure><img src={img} alt={name} className='p-4 rounded-3xl' /></figure>
             <div className="card-body">
                 <h2 className="card-title">{name}</h2>
